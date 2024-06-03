@@ -28,8 +28,11 @@ def classify(msg):
         taxes_and_licenses,
         depreciation_and_amortization,
         miscellaneous_business_expenses.
-        Do not explain your categorization give only the categorie you think fits best.
-        If you think the input does not fit any categorie well simply respond with no_fit.
+        Sometimes the input will be associated with a cost, if so respond with the category and cost in the following format:
+        {category : "<category>", cost : "<cost>"} where <category> is the category and <cost> is the cost represented only by a number.
+        Do not explain your categorization give only the categorie and cost you think fit best.
+        If you think the input does not fit any categorie well simply respond {category : "no_fit", cost : "<cost>"}.
+        If you think a cost wasn't provided simply respond with {category : "<category>", cost : "no_cost"}.
         """
     )
     model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
