@@ -3,6 +3,7 @@ import google.generativeai as geni
 
 key = os.environ.get('GEMINI_API_KEY')
 geni.configure(api_key=key)
+hist = []
 
 def classify(msg):
 
@@ -49,8 +50,10 @@ def message_type(msg):
         Do not add any information to your response besides "generic", "classify" and "not_sure".
         """
     )
+    hist.append({'role' : 'user', 'parts' : [msg]})
     model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
-    response = model.generate_content(msg)
+    response = model.generate_content(hist)
+    hist.append({'role' : 'model', 'parts' : [response.text]})
     return response.text
 
 

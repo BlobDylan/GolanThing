@@ -341,6 +341,11 @@
               return this;
           };
   
+          var scrollToBottom = function () {
+              var $messages = $('.messages');
+              $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+          };
+  
           $(function () {
               var getMessageText, message_side, showConfirmationModal, handleServerResponse;
               message_side = 'right';
@@ -365,6 +370,7 @@
                           message_side: 'left'
                       });
                       botMessage.draw();
+                      scrollToBottom();  // Scroll to bottom after adding the message
                   } else {
                       showConfirmationModal(data);
                   }
@@ -377,7 +383,7 @@
                       message_side: 'right'
                   });
                   userMessage.draw();
-                  $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+                  scrollToBottom();  // Scroll to bottom after adding the message
   
                   $.ajax({
                       type: "POST",
@@ -420,7 +426,7 @@
                               message_side: 'left'
                           });
                           botMessage.draw();
-                          $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+                          scrollToBottom();  // Scroll to bottom after adding the message
                       });
   
                   $('#confirmModal').modal('hide');
@@ -432,8 +438,9 @@
                   message_side: 'left'
               });
               writingMessage.draw();
+              scrollToBottom();  // Scroll to bottom after adding the message
           });
       }.call(this));
-  </script>  
+  </script>    
 </body>
 </html>
