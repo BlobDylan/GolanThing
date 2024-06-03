@@ -27,9 +27,10 @@ def get_bot_response():
 def get_message_details():
     data = request.get_json()
     message = data.get('msg', '')
-    cost = message
-    categorie = classify(message)
-    return jsonify({'categorie': categorie, 'cost': cost})
+    response_from_model = eval(classify(message))
+    cost = response_from_model["cost"]
+    category = response_from_model["category"]
+    return jsonify({'category': category, 'cost': cost, 'message' : message})
 
 @app.route('/refresh')
 def refresh():

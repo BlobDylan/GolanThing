@@ -1,403 +1,431 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     />
     <style>
-      #textInput {
-        border: 2px solid black;
-        border-bottom: 3px solid rgb(102, 102, 102);
-      }
+        #textInput {
+            border: 2px solid black;
+            border-bottom: 3px solid rgb(102, 102, 102);
+        }
 
-      .userText {
-        color: white;
-        font-family: monospace;
-        font-size: 17px;
-        text-align: right;
-        line-height: 30px;
-      }
-      .userText span {
-        background-color: #707070;
-        padding: 10px;
-        border-radius: 10px;
-      }
-      .botText {
-        color: white;
-        font-family: monospace;
-        font-size: 17px;
-        text-align: left;
-        line-height: 30px;
-      }
-      .botText span {
-        background-color: #4d4d4d;
-        padding: 5px;
-        border-radius: 10px;
-      }
+        .userText {
+            color: white;
+            font-family: monospace;
+            font-size: 17px;
+            text-align: right;
+            line-height: 30px;
+        }
 
-      * {
-        box-sizing: border-box;
-      }
+        .userText span {
+            background-color: #707070;
+            padding: 10px;
+            border-radius: 10px;
+        }
 
-      body {
-        background-color: #2c2c2c;
-        font-family: "Calibri", "Roboto", sans-serif;
-      }
-      .chat_window {
-        position: absolute;
-        width: calc(100% - 20px);
-        max-width: 800px;
-        height: 500px;
-        border-radius: 10px;
-        background-color: #4f4f4f;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        background-color: #727272;
-        overflow: hidden;
-      }
+        .botText {
+            color: white;
+            font-family: monospace;
+            font-size: 17px;
+            text-align: left;
+            line-height: 30px;
+        }
 
-      .top_menu {
-        background-color: #a2a2a2;
-        width: 100%;
-        padding: 20px 0 15px;
-        box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
-      }
-      .top_menu .buttons {
-        margin: 3px 0 0 20px;
-        position: absolute;
-      }
-      .top_menu .title {
-        text-align: center;
-        color: #1e1e1e;
-        font-size: 20px;
-      }
+        .botText span {
+            background-color: #4d4d4d;
+            padding: 5px;
+            border-radius: 10px;
+        }
 
-      .messages {
-        position: relative;
-        list-style: none;
-        padding: 20px 10px 0 10px;
-        margin: 0;
-        height: 347px;
-        overflow: scroll;
-      }
-      .messages .message {
-        clear: both;
-        overflow: hidden;
-        margin-bottom: 20px;
-        transition: all 0.5s linear;
-        opacity: 0;
-      }
-      .messages .message.left .avatar {
-        background-color: #1e1e1e;
-        float: left;
-      }
-      .messages .message.left .text_wrapper {
-        background-color: #a2a2a2;
-        margin-left: 20px;
-      }
-      .messages .message.left .text_wrapper::after,
-      .messages .message.left .text_wrapper::before {
-        right: 100%;
-        border-right-color: #a2a2a2;
-      }
-      .messages .message.left .text {
-        color: #1e1e1e;
-      }
-      .messages .message.left .avatar {
-        float: left;
-        width: 50px;
-        height: 50px;
-        background-image: url("https://pas-wordpress-media.s3.amazonaws.com/wp-content/uploads/2013/08/Customer-service-woman-on-headset-gives-OK-1024x770.jpg");
-        background-size: cover;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
+        * {
+            box-sizing: border-box;
+        }
 
-      .messages .message.right .text_wrapper {
-        background-color: #424242;
-        margin-right: 20px;
-        float: right;
-      }
-      .messages .message.right .text_wrapper::after,
-      .messages .message.right .text_wrapper::before {
-        left: 100%;
-        border-left-color: #424242;
-      }
-      .messages .message.right .text {
-        color: #c7c7c7;
-      }
-      .messages .message.appeared {
-        opacity: 1;
-      }
-      .messages .message .avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: inline-block;
-      }
-      .messages .message .text_wrapper {
-        display: inline-block;
-        padding: 20px;
-        border-radius: 6px;
-        width: calc(100% - 85px);
-        min-width: 100px;
-        position: relative;
-      }
-      .messages .message .text_wrapper::after,
-      .messages .message .text_wrapper:before {
-        top: 18px;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-        position: absolute;
-        pointer-events: none;
-      }
-      .messages .message .text_wrapper::after {
-        border-width: 13px;
-        margin-top: 0px;
-      }
-      .messages .message .text_wrapper::before {
-        border-width: 15px;
-        margin-top: -2px;
-      }
-      .messages .message .text_wrapper .text {
-        font-size: 18px;
-        font-weight: 300;
-      }
+        body {
+            background-color: #2c2c2c;
+            font-family: "Calibri", "Roboto", sans-serif;
+        }
 
-      .bottom_wrapper {
-        position: relative;
-        width: 100%;
-        background-color: #727272;
-        padding: 20px 20px;
-        position: absolute;
-        bottom: 0;
-      }
-      .bottom_wrapper .message_input_wrapper {
-        display: inline-block;
-        height: 50px;
-        border-radius: 25px;
-        border: 1px solid #727272;
-        width: calc(100% - 160px);
-        position: relative;
-        padding: 0 20px;
-      }
-      .bottom_wrapper .message_input_wrapper .message_input {
-        border: none;
-        height: 100%;
-        box-sizing: border-box;
-        width: calc(100% - 40px);
-        position: absolute;
-        outline-width: 0;
-        color: #727272;
-      }
-      .bottom_wrapper .send_message {
-        width: 140px;
-        height: 50px;
-        display: inline-block;
-        border-radius: 50px;
-        background-color: #2b2b2b;
-        border: 2px solid #3e3e3e;
-        color: #fff;
-        cursor: pointer;
-        transition: all 0.2s linear;
-        text-align: center;
-        float: right;
-      }
-      .bottom_wrapper .send_message:hover {
-        color: #2b2b2b;
-        background-color: #a0a0a0;
-      }
-      .bottom_wrapper .send_message .text {
-        font-size: 18px;
-        font-weight: 300;
-        display: inline-block;
-        line-height: 48px;
-      }
+        .chat_window {
+            position: absolute;
+            width: calc(100% - 20px);
+            max-width: 800px;
+            height: 500px;
+            border-radius: 10px;
+            background-color: #4f4f4f;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            background-color: #727272;
+            overflow: hidden;
+        }
 
-      .message_template {
-        display: none;
-      }
+        .top_menu {
+            background-color: #a2a2a2;
+            width: 100%;
+            padding: 20px 0 15px;
+            box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .top_menu .buttons {
+            margin: 3px 0 0 20px;
+            position: absolute;
+        }
+
+        .top_menu .title {
+            text-align: center;
+            color: #1e1e1e;
+            font-size: 20px;
+        }
+
+        .messages {
+            position: relative;
+            list-style: none;
+            padding: 20px 10px 0 10px;
+            margin: 0;
+            height: 347px;
+            overflow: scroll;
+        }
+
+        .messages .message {
+            clear: both;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.5s linear;
+            opacity: 0;
+        }
+
+        .messages .message.left .avatar {
+            background-color: #1e1e1e;
+            float: left;
+        }
+
+        .messages .message.left .text_wrapper {
+            background-color: #a2a2a2;
+            margin-left: 20px;
+        }
+
+        .messages .message.left .text_wrapper::after,
+        .messages .message.left .text_wrapper::before {
+            right: 100%;
+            border-right-color: #a2a2a2;
+        }
+
+        .messages .message.left .text {
+            color: #1e1e1e;
+        }
+
+        .messages .message.left .avatar {
+            float: left;
+            width: 50px;
+            height: 50px;
+            background-image: url("https://pas-wordpress-media.s3.amazonaws.com/wp-content/uploads/2013/08/Customer-service-woman-on-headset-gives-OK-1024x770.jpg");
+            background-size: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .messages .message.right .text_wrapper {
+            background-color: #424242;
+            margin-right: 20px;
+            float: right;
+        }
+
+        .messages .message.right .text_wrapper::after,
+        .messages .message.right .text_wrapper::before {
+            left: 100%;
+            border-left-color: #424242;
+        }
+
+        .messages .message.right .text {
+            color: #c7c7c7;
+        }
+
+        .messages .message.appeared {
+            opacity: 1;
+        }
+
+        .messages .message .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .messages .message .text_wrapper {
+            display: inline-block;
+            padding: 20px;
+            border-radius: 6px;
+            width: calc(100% - 85px);
+            min-width: 100px;
+            position: relative;
+        }
+
+        .messages .message .text_wrapper::after,
+        .messages .message .text_wrapper:before {
+            top: 18px;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .messages .message .text_wrapper::after {
+            border-width: 13px;
+            margin-top: 0px;
+        }
+
+        .messages .message .text_wrapper::before {
+            border-width: 15px;
+            margin-top: -2px;
+        }
+
+        .messages .message .text_wrapper .text {
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        .bottom_wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #727272;
+            padding: 20px 20px;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .bottom_wrapper .message_input_wrapper {
+            display: inline-block;
+            height: 50px;
+            border-radius: 25px;
+            border: 1px solid #727272;
+            width: calc(100% - 160px);
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .bottom_wrapper .message_input_wrapper .message_input {
+            border: none;
+            height: 100%;
+            box-sizing: border-box;
+            width: calc(100% - 40px);
+            position: absolute;
+            outline-width: 0;
+            color: #727272;
+        }
+
+        .bottom_wrapper .send_message {
+            width: 140px;
+            height: 50px;
+            display: inline-block;
+            border-radius: 50px;
+            background-color: #2b2b2b;
+            border: 2px solid #3e3e3e;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s linear;
+            text-align: center;
+            float: right;
+        }
+
+        .bottom_wrapper .send_message:hover {
+            color: #2b2b2b;
+            background-color: #a0a0a0;
+        }
+
+        .bottom_wrapper .send_message .text {
+            font-size: 18px;
+            font-weight: 300;
+            display: inline-block;
+            line-height: 48px;
+        }
+
+        .message_template {
+            display: none;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="confirmModal" class="modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Confirm Message</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Categorie: <span id="categorie"></span></p>
-            <p>Cost: <span id="confirmMessage"></span></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="confirmSend">
-              Send
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-          </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Message</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>category: <span id="category"></span></p>
+                    <p>Cost: <span id="cost"></span></p>
+                    <p>Description: <span id="confirmMessage"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirmSend">
+                        Send
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
     <div class="chat_window">
-      <div class="top_menu">
-        <div class="title">Expenses Chat:</div>
-      </div>
-      <ul class="messages"></ul>
-      <div class="bottom_wrapper clearfix">
-        <div class="message_input_wrapper">
-          <input
-            class="message_input"
-            placeholder="Type your message here..."
-          />
+        <div class="top_menu">
+            <div class="title">Expenses Chat:</div>
         </div>
-        <div class="send_message">
-          <div class="icon"></div>
-          <div class="text">Send</div>
-        </div>
-        <!--
+        <ul class="messages"></ul>
+        <div class="bottom_wrapper clearfix">
+            <div class="message_input_wrapper">
+                <input
+                    class="message_input"
+                    placeholder="Type your message here..."
+                />
+            </div>
+            <div class="send_message">
+                <div class="icon"></div>
+                <div class="text">Send</div>
+            </div>
+            <!--
         <button id="refreshBtn" class="btn btn-primary form-control" onclick="location.reload()">Refresh</button>
         -->
-      </div>
-      <div class="message_template">
-        <li class="message">
-          <div class="avatar"></div>
-          <div class="text_wrapper">
-            <div class="text"></div>
-          </div>
-        </li>
-      </div>
+        </div>
+        <div class="message_template">
+            <li class="message">
+                <div class="avatar"></div>
+                <div class="text_wrapper">
+                    <div class="text"></div>
+                </div>
+            </li>
+        </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<script>
-    (function () {
-        var Message;
-        Message = function (arg) {
-            this.text = arg.text, this.message_side = arg.message_side;
-            this.draw = function (_this) {
-                return function () {
-                    var $message;
-                    $message = $($('.message_template').clone().html());
-                    $message.addClass(_this.message_side).find('.text').html(_this.text);
-                    $('.messages').append($message);
-                    return setTimeout(function () {
-                        return $message.addClass('appeared');
-                    }, 0);
+    <script>
+        (function () {
+            var Message;
+            Message = function (arg) {
+                this.text = arg.text, this.message_side = arg.message_side;
+                this.draw = function (_this) {
+                    return function () {
+                        var $message;
+                        $message = $($('.message_template').clone().html());
+                        $message.addClass(_this.message_side).find('.text').html(_this.text);
+                        $('.messages').append($message);
+                        return setTimeout(function () {
+                            return $message.addClass('appeared');
+                        }, 0);
+                    };
+                }(this);
+                return this;
+            };
+
+            $(function () {
+                var getMessageText, message_side, showConfirmationModal, confirmSendMessage;
+                message_side = 'right';
+
+                getMessageText = function () {
+                    var $message_input;
+                    $message_input = $('.message_input');
+                    return $message_input.val();
                 };
-            }(this);
-            return this;
-        };
 
-        $(function () {
-            var getMessageText, message_side, showConfirmationModal, confirmSendMessage;
-            message_side = 'right';
+                showConfirmationModal = function (data) {
+                    $('#category').text(data.category);
+                    $('#cost').text(data.cost);
+                    $('#confirmMessage').text(data.message);
+                    $('#confirmModal').modal('show');
+                };
 
-            getMessageText = function () {
-                var $message_input;
-                $message_input = $('.message_input');
-                return $message_input.val();
-            };
+                confirmSendMessage = function (text) {
+                    var $messages, message;
+                    if (text.trim() === '') {
+                        return;
+                    }
+                    $('.message_input').val('');
+                    $messages = $('.messages');
 
-            showConfirmationModal = function (data) {
-                $('#categorie').text(data.categorie);
-                $('#confirmMessage').text(data.cost);
-                $('#confirmModal').modal('show');
-            };
-
-            confirmSendMessage = function (text) {
-                var $messages, message;
-                if (text.trim() === '') {
-                    return;
-                }
-                $('.message_input').val('');
-                $messages = $('.messages');
-
-                message = new Message({
-                    text: text,
-                    message_side: message_side
-                });
-
-                message.draw();
-
-                $.get("/get", { msg: text }).done(function(data) {
-                    var botMessage = new Message({
-                        text: data,
-                        message_side: 'left'
+                    message = new Message({
+                        text: text,
+                        message_side: message_side
                     });
 
-                    botMessage.draw();
-                    $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-                });
+                    message.draw();
 
-                return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-            };
+                    $.get("/get", { msg: text }).done(function (data) {
+                        var botMessage = new Message({
+                            text: data,
+                            message_side: 'left'
+                        });
 
-            $('.send_message').click(function (e) {
-                var text = getMessageText();
-                $.ajax({
-                    type: "POST",
-                    url: "/getMessageDetails",
-                    contentType: "application/json",
-                    data: JSON.stringify({ msg: text }),
-                    success: function(data) {
-                        showConfirmationModal(data);
-                    }
-                });
-            });
+                        botMessage.draw();
+                        $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+                    });
 
-            $('.message_input').keyup(function (e) {
-                if (e.which === 13) {
+                    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+                };
+
+                $('.send_message').click(function (e) {
                     var text = getMessageText();
                     $.ajax({
                         type: "POST",
                         url: "/getMessageDetails",
                         contentType: "application/json",
                         data: JSON.stringify({ msg: text }),
-                        success: function(data) {
+                        success: function (data) {
                             showConfirmationModal(data);
                         }
                     });
-                }
-            });
-            $('#confirmSend').click(function () {
-                var text = $('#confirmMessage').text();
-                confirmSendMessage(text);
-                $('#confirmModal').modal('hide');
-            });
+                });
 
-            // Add "Writing..." message
-            writingMessage = new Message({
-                text: 'Hello there!',
-                message_side: 'left'
+                $('.message_input').keyup(function (e) {
+                    if (e.which === 13) {
+                        var text = getMessageText();
+                        $.ajax({
+                            type: "POST",
+                            url: "/getMessageDetails",
+                            contentType: "application/json",
+                            data: JSON.stringify({ msg: text }),
+                            success: function (data) {
+                                showConfirmationModal(data);
+                            }
+                        });
+                    }
+                });
+                $('#confirmSend').click(function () {
+                    var text = $('#confirmMessage').text();
+                    confirmSendMessage(text);
+                    $('#confirmModal').modal('hide');
+                });
+
+                // Add "Writing..." message
+                writingMessage = new Message({
+                    text: 'Hello there!',
+                    message_side: 'left'
+                });
+                writingMessage.draw();
             });
-            writingMessage.draw();
-        });
-    }.call(this));
-</script>
-  </body>
+        }.call(this));
+    </script>
+</body>
 </html>
