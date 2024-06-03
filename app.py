@@ -3,6 +3,7 @@ from cls import classify
 import sqlite3
 import os
 import time
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -16,24 +17,14 @@ def get_db_connection():
 with app.app_context():
     con = get_db_connection()
     cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, category VARCHAR(255), cost INT, description TEXT);")
+    cur.execute("CREATE TABLE IF NOT EXISTS expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, category VARCHAR(255), cost INT, description TEXT, date DATE);")
     con.commit()
     con.close()
-
-# Function to get a response from the chatbot
-def get_response(userText):
-    return "response!"
 
 # Define app routes
 @app.route("/")
 def index():
     return render_template("index.html")
-
-@app.route("/get")
-# Function for the bot response
-def get_bot_response():
-    userText = request.args.get('msg')
-    return str(get_response(userText))
 
 @app.route('/getMessageDetails', methods=['POST'])
 def get_message_details():
@@ -52,8 +43,8 @@ def add_to_database():
     
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO expenses (category, cost, description) VALUES (?, ?, ?)",
-                   (category, cost, message))
+    cursor.execute("INSERT INTO expenses (category, cost, description, date) VALUES (?, ?, ?, ?)",
+                   (category, cost, message,datetime.today().strftime('%Y-%m-%d')))
     conn.commit()
     conn.close()
     return "Added to the database."
