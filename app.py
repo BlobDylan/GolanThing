@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, jsonify
-from cls import classify
+from cls import classify,message_type,question_response
 import sqlite3
 import os
+import json
 import time
 from datetime import datetime
 
@@ -30,11 +31,24 @@ def index():
 def get_message_details():
     data = request.get_json()
     message = data.get('msg', '')
-    response_from_model = eval(classify(message))
-    cost = response_from_model["cost"]
-    category = response_from_model["category"]
-    return jsonify({'category': category, 'cost': cost, 'message': message})
+    msg_type = message_type(message).strip()
 
+    if msg_type == "classify":
+        response_from_model = eval(classify(message))
+        cost = response_from_model["cost"]
+        category = response_from_model["category"]
+        return jsonify({'category': category, 'cost': cost, 'message': message})
+    
+    if msg_type == "generic":
+        conn = sqlite3.connect('data.db')
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute("SELECT * FROM expenses").fetchall()
+        json_format_dump = json.dumps([dict(x) for x in rows])
+        response_from_model = question_response(message, json_format_dump)
+        return jsonify({'category': "", 'cost': "", 'message': response_from_model})
+    
+    return jsonify({'category': "", 'cost': "", 'message': "Sorry, I didn't understand the message."})
+    
 @app.route('/addToDatabase', methods=['POST'])
 def add_to_database():
     category = request.form['category']

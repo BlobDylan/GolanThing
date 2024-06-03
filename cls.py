@@ -39,3 +39,29 @@ def classify(msg):
     response = model.generate_content(msg)
     return response.text
 
+def message_type(msg):
+
+    instruction = (
+        """
+        You are in charge of responding to an input that may be a generic message or an attempt to report a cash expense
+        On the given input respond "generic" if you think the input is a question, otherwise, respond "classify".
+        If the input is unclear repspond "not_sure".
+        Do not add any information to your response besides "generic", "classify" and "not_sure".
+        """
+    )
+    model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
+    response = model.generate_content(msg)
+    return response.text
+
+
+def question_response(msg, db):
+    instruction = (
+        f"""
+        Given an input answer based on the following information:
+        {db}
+        Try to be short and concice.
+        """
+    )
+    model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
+    response = model.generate_content(msg)
+    return response.text
