@@ -50,10 +50,8 @@ def message_type(msg):
         Do not add any information to your response besides "generic", "classify" and "not_sure".
         """
     )
-    hist.append({'role' : 'user', 'parts' : [msg]})
     model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
-    response = model.generate_content(hist)
-    hist.append({'role' : 'model', 'parts' : [response.text]})
+    response = model.generate_content(msg)
     return response.text
 
 
@@ -65,6 +63,9 @@ def question_response(msg, db):
         Try to be short and concice.
         """
     )
+    hist.append({'role' : 'user', 'parts' : [msg]})
     model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
-    response = model.generate_content(msg)
+    response = model.generate_content(hist)
+    hist.append({'role' : 'model', 'parts' : [response.text]})
+    print(hist)
     return response.text
