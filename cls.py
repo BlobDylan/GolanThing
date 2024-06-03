@@ -1,10 +1,10 @@
 import os
 import google.generativeai as geni
 
-def classify(msg):
-    key = os.environ.get('GEMINI_API_KEY')
+key = os.environ.get('GEMINI_API_KEY')
+geni.configure(api_key=key)
 
-    geni.configure(api_key=key)
+def classify(msg):
 
     instruction = (
         """Given an input I want you to classify it into one of the following classes:

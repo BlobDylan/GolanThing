@@ -1,12 +1,24 @@
-# Import necessary libraries
 from flask import Flask, render_template, request, redirect, jsonify
 from cls import classify
+import sqlite3
 import os
 import time
 
-
-# Create a Flask web application
 app = Flask(__name__)
+
+# Create database connection
+def get_db_connection():
+    conn = sqlite3.connect('data.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+# Ensure the database and table exist
+with app.app_context():
+    con = get_db_connection()
+    cur = con.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, category VARCHAR(255), cost INT, description TEXT);")
+    con.commit()
+    con.close()
 
 # Function to get a response from the chatbot
 def get_response(userText):
@@ -30,7 +42,21 @@ def get_message_details():
     response_from_model = eval(classify(message))
     cost = response_from_model["cost"]
     category = response_from_model["category"]
-    return jsonify({'category': category, 'cost': cost, 'message' : message})
+    return jsonify({'category': category, 'cost': cost, 'message': message})
+
+@app.route('/addToDatabase', methods=['POST'])
+def add_to_database():
+    category = request.form['category']
+    cost = request.form['cost']
+    message = request.form['message']
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO expenses (category, cost, description) VALUES (?, ?, ?)",
+                   (category, cost, message))
+    conn.commit()
+    conn.close()
+    return "Added to the database."
 
 @app.route('/refresh')
 def refresh():
