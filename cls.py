@@ -63,9 +63,6 @@ def question_response(msg, db):
         Try to be short and concice.
         """
     )
-    hist.append({'role' : 'user', 'parts' : [msg]})
     model = geni.GenerativeModel('gemini-1.5-flash',system_instruction=instruction)
-    response = model.generate_content(hist)
-    hist.append({'role' : 'model', 'parts' : [response.text]})
-    print(hist)
+    response = model.generate_content(msg)
     return response.text
